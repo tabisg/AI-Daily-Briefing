@@ -10,7 +10,7 @@ from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 
 def generate_newsletter():
-    print("🧠 Waking up the AI Brain (Llama-3 via Groq)...")
+    print(" Waking up the AI Brain (Llama-3 via Groq)...")
 
    # 2. Connect to the LLM (Keep your real gsk_ key here!)
     llm = ChatGroq(
@@ -32,7 +32,7 @@ def generate_newsletter():
     context_text = "\n".join(saved_tweets)
 
     # 4. Give the AI its instructions (Prompt Engineering)
-    print("✍️ Writing the daily briefing...\n")
+    print(" Writing the daily briefing...\n")
     
     prompt_template = """
     You are an expert technology and entertainment journalist. 
@@ -58,10 +58,11 @@ def generate_newsletter():
     
     # 6. Print the final product
     print("==================================================")
-    print("📰 YOUR AUTONOMOUS DAILY BRIEFING")
+    print(" YOUR AUTONOMOUS DAILY BRIEFING")
     print("==================================================\n")
     print(response.content)
 
 if __name__ == "__main__":
 
     generate_newsletter()
+
