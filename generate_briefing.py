@@ -1,6 +1,12 @@
 import os
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
+import os
+try:
+    import streamlit as st
+    os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+except:
+    pass
 
 # 1. Block ChromaDB Telemetry BEFORE it imports so it doesn't freeze!
 os.environ["ANONYMIZED_TELEMETRY"] = "False"
@@ -65,4 +71,5 @@ def generate_newsletter():
 if __name__ == "__main__":
 
     generate_newsletter()
+
 
