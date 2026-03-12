@@ -1,4 +1,6 @@
 import os
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 
 # 1. Block ChromaDB Telemetry BEFORE it imports so it doesn't freeze!
 os.environ["ANONYMIZED_TELEMETRY"] = "False"
@@ -61,4 +63,5 @@ def generate_newsletter():
     print(response.content)
 
 if __name__ == "__main__":
+
     generate_newsletter()
