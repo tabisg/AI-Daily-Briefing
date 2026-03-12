@@ -3,3 +3,6 @@ chromadb
 groq
 requests
 beautifulsoup4
+langchain
+langchain-groq
+langchain-community
