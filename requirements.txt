@@ -1,7 +1,5 @@
-langchain
-
-langchain-groq
-
-chromadb
-
 streamlit
+chromadb
+groq
+requests
+beautifulsoup4
