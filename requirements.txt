@@ -1,0 +1,7 @@
+langchain
+
+langchain-groq
+
+chromadb
+
+streamlit
