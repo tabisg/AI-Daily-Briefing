@@ -19,9 +19,9 @@ def generate_newsletter():
     print(" Waking up the AI Brain (Llama-3 via Groq)...")
 
    # 2. Connect to the LLM (Keep your real gsk_ key here!)
-    llm = ChatGroq(
-        api_key="YOUR_GROQ_API_KEY_HERE",  # <--- UPDATE THIS LINE
-        model="llama-3.1-8b-instant",  # <--- UPDATE THIS LINE
+   llm = ChatGroq(
+        api_key=os.environ.get("GROQ_API_KEY"),
+        model="llama-3.1-8b-instant",
         temperature=0.3 
     )
 
@@ -71,5 +71,6 @@ def generate_newsletter():
 if __name__ == "__main__":
 
     generate_newsletter()
+
 
 
