@@ -1,77 +1,62 @@
 import os
-import sys
-sys.stdout.reconfigure(encoding='utf-8')
-import os
+import feedparser
+from langchain_groq import ChatGroq
+from langchain_core.prompts import PromptTemplate
+
+# Streamlit Cloud ke liye Magic Key
 try:
     import streamlit as st
     os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
 except:
     pass
 
-# 1. Block ChromaDB Telemetry BEFORE it imports so it doesn't freeze!
-os.environ["ANONYMIZED_TELEMETRY"] = "False"
-
-import chromadb
-from langchain_groq import ChatGroq
-from langchain_core.prompts import PromptTemplate
+def fetch_trending_news():
+    # Google News (Global + India Trending) - 100% Free & Fast
+    url = "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en"
+    feed = feedparser.parse(url)
+    
+    news_items = []
+    # Top 10 trending articles uthayenge
+    for entry in feed.entries[:10]:
+        news_items.append(f"Title: {entry.title}\nSummary: {entry.summary}")
+        
+    return "\n\n".join(news_items)
 
 def generate_newsletter():
-    print(" Waking up the AI Brain (Llama-3 via Groq)...")
+    print("🌍 Fetching Global Trending News...")
+    trending_data = fetch_trending_news()
     
-    # 2. Connect to the LLM
+    print("🧠 Processing with Llama-3 (Inshorts Style)...")
     llm = ChatGroq(
         api_key=os.environ.get("GROQ_API_KEY"),
         model="llama-3.1-8b-instant",
         temperature=0.3
     )
-
-    # 3. Connect to your AI Memory (ChromaDB)
-    print("🔍 Searching memory for today's trends...")
-    client = chromadb.PersistentClient(path="./chroma_db")
-    collection = client.get_collection(name="trend_chatter")
-
-    # Pull all the saved tweets out of the database
-    results = collection.get(include=["documents"])
-    saved_tweets = results['documents']
     
-    # Combine them into one big text block for the AI to read
-    context_text = "\n".join(saved_tweets)
+    # THE INSHORTS PROMPT
+    template = """
+    You are an expert News Editor creating an 'Inshorts' style daily feed.
+    Below are the top trending news articles of the day from various fields (Politics, Sports, Business, Technology, Entertainment, etc.).
 
-    # 4. Give the AI its instructions (Prompt Engineering)
-    print(" Writing the daily briefing...\n")
-    
-    prompt_template = """
-    You are an expert technology and entertainment journalist. 
-    Read the following recent internet chatter and write a clean, professional daily briefing.
-    
-    Rules:
-    1. Separate the briefing into two distinct sections: "💻 Developer Updates" and "🎬 Entertainment News".
-    2. Use bullet points for readability.
-    3. Keep it concise and punchy.
-    4. Do NOT make up any information. ONLY use the provided context below.
+    For each news item, provide:
+    1. An appropriate Category Emoji and Name (e.g., 🏏 Sports, 💰 Business, 🌍 World News)
+    2. A catchy, bold Headline
+    3. A crisp, engaging summary in EXACTLY 60 words.
 
-    Context (Recent Internet Chatter):
+    Format them clearly as separate news cards with a horizontal line (---) between them. Do not include any intro or outro text.
+
+    Raw News Data:
     {context}
-
-    Your Daily Briefing:
     """
     
-    prompt = PromptTemplate.from_template(prompt_template)
-    
-    # 5. Connect the prompt and the LLM, then run it!
+    prompt = PromptTemplate.from_template(template)
     chain = prompt | llm
-    response = chain.invoke({"context": context_text})
     
-    # 6. Print the final product
-    print("==================================================")
-    print(" YOUR AUTONOMOUS DAILY BRIEFING")
-    print("==================================================\n")
-    print(response.content)
+    response = chain.invoke({"context": trending_data})
+    return response.content
 
 if __name__ == "__main__":
-
-    generate_newsletter()
-
+    print(generate_newsletter())
 
 
 
