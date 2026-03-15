@@ -40,23 +40,32 @@ def generate_newsletter():
         temperature=0.3
     )
     
-    # 🚀 THE STRICT INSHORTS PROMPT (For Perfect Streamlit UI)
+   # 🚀 THE STRICT GROUPED INSHORTS PROMPT
     template = """
     You are an expert News Editor creating an 'Inshorts' style daily feed.
-    Below are the top trending news articles of the day.
+    Below are the top trending news articles of the day, fetched by category.
 
-    You MUST format EACH news item EXACTLY in this Markdown structure. It is CRITICAL to keep the exact blank lines as shown below:
+    Your task is to GROUP the news by their Category. 
+    Print the Category Header ONLY ONCE, and then list all the news articles for that category below it.
+
+    You MUST format it EXACTLY in this Markdown structure. Keep the exact blank lines:
 
     ## [Category Emoji] [Category Name]
 
-    **[Catchy, Bold Headline]**
-
+    **[Catchy, Bold Headline 1]**
+    
     [A crisp, engaging summary in EXACTLY 60 words.]
-
+    
+    ---
+    
+    **[Catchy, Bold Headline 2]**
+    
+    [A crisp, engaging summary in EXACTLY 60 words.]
+    
     ---
 
     Do NOT write any intro or outro text (like 'Here is the news'). 
-    Strictly follow the formatting, double line breaks, and hash symbols shown above.
+    Do NOT repeat the category header for every single news item.
 
     Raw News Data:
     {context}
