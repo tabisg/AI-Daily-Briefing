@@ -36,7 +36,7 @@ def generate_newsletter():
     
     llm = ChatGoogleGenerativeAI(
         api_key=os.environ.get("GEMINI_API_KEY"),
-        model="gemini-1.5-flash",
+        model="gemini-1.5-flash-latest",
         temperature=0.3
     )
     
