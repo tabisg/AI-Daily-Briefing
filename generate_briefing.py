@@ -36,11 +36,11 @@ def generate_newsletter():
     
     llm = ChatGoogleGenerativeAI(
         api_key=os.environ.get("GEMINI_API_KEY"),
-        model="gemini-1.5-flash-latest",
+        model="gemini-pro",  # <--- Naya, 100% stable bulletproof model!
         temperature=0.3
     )
     
-   # 🚀 THE STRICT INSHORTS PROMPT (For Perfect Streamlit UI)
+    # 🚀 THE STRICT INSHORTS PROMPT (For Perfect Streamlit UI)
     template = """
     You are an expert News Editor creating an 'Inshorts' style daily feed.
     Below are the top trending news articles of the day.
