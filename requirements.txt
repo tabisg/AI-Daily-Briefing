@@ -7,3 +7,4 @@ langchain
 langchain-groq
 langchain-community
 feedparser
+langchain-google-genai
