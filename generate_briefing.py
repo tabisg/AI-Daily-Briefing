@@ -36,7 +36,7 @@ def generate_newsletter():
     
     llm = ChatGoogleGenerativeAI(
         api_key=os.environ.get("GEMINI_API_KEY"),
-        model="gemini-pro",  # <--- Naya, 100% stable bulletproof model!
+        model="gemini-2.5-flash",  # <--- Welcome to 2026! Yeh Google ka sabse naya aur active model hai
         temperature=0.3
     )
     
