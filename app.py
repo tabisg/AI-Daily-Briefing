@@ -3,23 +3,24 @@ import subprocess
 import sys
 import os
 
-st.title("🤖 Autonomous AI Curation Agent")
-st.write("Welcome to my RAG Pipeline! Click the button below to generate today's briefing.")
+# Website ka naya title aur icon
+st.set_page_config(page_title="Global AI News", page_icon="🌍")
 
-# 🛑 THE MAGIC TRICK: Streamlit ke secrets ko zabardasti system mein daalna
+st.title("🌍 Universal AI News Feed")
+st.write("Welcome! Click the button below to fetch the latest global trending news in crisp 60-word summaries (Inshorts Style).")
+
+# 🛑 THE MAGIC TRICK: Streamlit ke secrets ko system mein daalna
 try:
     if "GROQ_API_KEY" in st.secrets:
         os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
 except:
     pass
 
-if st.button("Generate Today's News"):
-    st.info("Fetching data and generating AI briefing... Please wait.")
+if st.button("Get Trending News"):
+    st.info("Fetching global trends and AI is writing 60-word summaries... Please wait.")
     
     try:
-        # Background scripts ab automatically nayi OS key pick karengi
-        subprocess.run([sys.executable, "run_pipeline.py"], check=True)
-        
+        # Ab seedha generate_briefing chalega (purana pipeline hata diya)
         result = subprocess.run(
             [sys.executable, "generate_briefing.py"], 
             capture_output=True, 
@@ -31,7 +32,7 @@ if st.button("Generate Today's News"):
             st.error("Error in generating briefing. AI Logs:")
             st.code(result.stderr)
         else:
-            st.success("Briefing Generated Successfully!")
+            st.success("Here are your 60-word updates!")
             st.markdown(result.stdout)
             
     except Exception as e:
