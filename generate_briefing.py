@@ -3,7 +3,7 @@ import feedparser
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 
-# Streamlit Cloud ke liye Magic Key
+#  For Streamlit Cloud magic trick to access secrets in this standalone script
 try:
     import streamlit as st
     os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
@@ -11,17 +11,18 @@ except:
     pass
 
 def fetch_trending_news():
-    # Google News (Global + India Trending) - 100% Free & Fast
+    # Google News (Global + India Trending)
     url = "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en"
     feed = feedparser.parse(url)
     
     news_items = []
-    # Top 10 trending articles uthayenge
-    for entry in feed.entries[:10]:
-        news_items.append(f"Title: {entry.title}\nSummary: {entry.summary}")
+    # FIX: now we are taking only top 6 news items to keep it concise for the LLM
+    for entry in feed.entries[:6]:
+        # FIX: summary are usually long, we will truncate it to 300 characters for the LLM to process better
+        short_summary = entry.summary[:300] + "..." 
+        news_items.append(f"Title: {entry.title}\nSummary: {short_summary}")
         
     return "\n\n".join(news_items)
-
 def generate_newsletter():
     print("🌍 Fetching Global Trending News...")
     trending_data = fetch_trending_news()
@@ -57,6 +58,3 @@ def generate_newsletter():
 
 if __name__ == "__main__":
     print(generate_newsletter())
-
-
-
