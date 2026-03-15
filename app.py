@@ -17,7 +17,7 @@ except:
     pass
 
 if st.button("Get Trending News"):
-    st.info("Fetching global trends and AI is writing 60-word summaries... Please wait.")
+   with st.spinner("🚀 Analyzing global trends and curating your buzz..."):
     
     try:
         # now we are running the generate_briefing.py script as a subprocess and capturing its output)
