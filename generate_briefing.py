@@ -1,4 +1,5 @@
 import os
+import concurrent.futures
 import feedparser
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
@@ -10,8 +11,17 @@ try:
 except:
     pass
 
+
+
+def fetch_single_category(category, url):
+    """Ek single category laane ka fast function"""
+    feed = feedparser.parse(url)
+    items = []
+    for entry in feed.entries[:6]:
+         items.append(f"Category: {category}\nTitle: {entry.title}\nSummary: {entry.summary}")
+    return items
+
 def fetch_trending_news():
-    # 🚀 Naya Upgrade: now we fetch new data for every categeory 
     urls = {
         "Technology": "https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=en-IN&gl=IN&ceid=IN:en",
         "Sports": "https://news.google.com/rss/headlines/section/topic/SPORTS?hl=en-IN&gl=IN&ceid=IN:en",
@@ -20,15 +30,18 @@ def fetch_trending_news():
         "World": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-IN&gl=IN&ceid=IN:en"
     }
     
-    news_items = []
+    all_news = []
     
-    # everynews category ke liye top 6 articles fetch karenge
-    for category, url in urls.items():
-        feed = feedparser.parse(url)
-        for entry in feed.entries[:6]:
-            news_items.append(f"Category: {category}\nTitle: {entry.title}\nSummary: {entry.summary}")
+    # 🚀 The Multi-Threading Magic: 5 URLs ek saath fetch honge!
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # 5 parallel tasks start kardiye
+        futures = [executor.submit(fetch_single_category, cat, url) for cat, url in urls.items()]
+        
+        # Jaise jaise data aata jayega, list mein add hota jayega
+        for future in concurrent.futures.as_completed(futures):
+            all_news.extend(future.result())
             
-    return "\n\n".join(news_items)
+    return "\n\n".join(all_news)
 
 def generate_newsletter():
     # New Upgrade: Ab hum har category ke liye alag se data fetch karenge, taaki Gemini ko zyada fresh aur relevant news mile.
