@@ -1,39 +1,43 @@
 import streamlit as st
-import subprocess
-import sys
 import os
+# Hum functions ko direct import kar rahe hain
+from generate_briefing import generate_newsletter, generate_audio
 
-# Website new title and icon
+# Website Config
 st.set_page_config(page_title="Global AI News", page_icon="🌍")
 
 st.title("🌍 Universal AI News Feed")
-st.write("Welcome! Click the button below to fetch the latest global trending news in crisp 60-word summaries (Inshorts Style).")
+st.write("Get the latest insights analyzed by AI with Sentiment, Trust Scores, and Audio Podcast!")
 
-# 🛑 THE MAGIC TRICK: streamlit 
-try:
-    if "GROQ_API_KEY" in st.secrets:
-        os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
-except:
-    pass
-
+# News Fetch karne ka logic
 if st.button("Get Trending News"):
-   with st.spinner("🚀 Analyzing global trends and curating your buzz..."):
-    
-    try:
-        # now we are running the generate_briefing.py script as a subprocess and capturing its output)
-        result = subprocess.run(
-            [sys.executable, "generate_briefing.py"], 
-            capture_output=True, 
-            text=True,
-            encoding='utf-8'
-        )
-        
-        if result.returncode != 0:
-            st.error("Error in generating briefing. AI Logs:")
-            st.code(result.stderr)
-        else:
-            st.success("✨ Your Personalized Daily Briefing is Ready!")
-            st.markdown(result.stdout)
+    with st.spinner("🚀 Analyzing global trends and curating your buzz..."):
+        try:
+            # Direct function call (No subprocess - much faster!)
+            briefing = generate_newsletter()
             
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+            # News ko session state mein save karlo
+            st.session_state.full_briefing = briefing
+            st.success("✨ Your Personalized Daily Briefing is Ready!")
+            
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+
+# Agar briefing generate ho chuki hai, toh use dikhao
+if "full_briefing" in st.session_state:
+    st.markdown(st.session_state.full_briefing)
+    
+    st.divider() # Sundar separation line
+    
+    # 🎙️ Podcast Section
+    st.subheader("🎧 Audio Briefing")
+    if st.button("🎙️ Listen to Daily Buzz"):
+        with st.spinner("Preparing your audio podcast..."):
+            try:
+                # Audio generate karo
+                audio_data = generate_audio(st.session_state.full_briefing)
+                # Player dikhao
+                st.audio(audio_data, format="audio/mp3")
+                st.success("▶️ Click play to listen!")
+            except Exception as audio_err:
+                st.error(f"Audio error: {audio_err}")
