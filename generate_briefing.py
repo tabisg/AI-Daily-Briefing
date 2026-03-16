@@ -7,13 +7,13 @@ from gtts import gTTS
 import io
 
 def generate_audio(text):
-    # AI ke response se Markdown characters (#, *, ---) saaf karna taaki voice saaf aaye
+    # MAKE AI RESPONSE AUDIO-FRIENDLY (remove markdown and special chars) like #, *, -
     clean_text = text.replace("#", "").replace("*", "").replace("-", "")
     
-    # Text ko audio mein badalna (English-India accent ke liye 'en-in')
+    # CHANGE TEXT TO SPEECH
     tts = gTTS(text=clean_text, lang='en', tld='co.in')
     
-    # Audio ko memory mein save karna (taaki file system ka jhamela na ho)
+    # SAVE AUDIO TO BYTESIO (instead of file) for Streamlit
     audio_fp = io.BytesIO()
     tts.write_to_fp(audio_fp)
     audio_fp.seek(0)
