@@ -3,6 +3,21 @@ import feedparser
 import concurrent.futures
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
+from gtts import gTTS
+import io
+
+def generate_audio(text):
+    # AI ke response se Markdown characters (#, *, ---) saaf karna taaki voice saaf aaye
+    clean_text = text.replace("#", "").replace("*", "").replace("-", "")
+    
+    # Text ko audio mein badalna (English-India accent ke liye 'en-in')
+    tts = gTTS(text=clean_text, lang='en', tld='co.in')
+    
+    # Audio ko memory mein save karna (taaki file system ka jhamela na ho)
+    audio_fp = io.BytesIO()
+    tts.write_to_fp(audio_fp)
+    audio_fp.seek(0)
+    return audio_fp
 
 # Model Setup (2026 Latest)
 llm = ChatGoogleGenerativeAI(
