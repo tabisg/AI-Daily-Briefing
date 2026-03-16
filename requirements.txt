@@ -8,3 +8,4 @@ langchain-groq
 langchain-community
 feedparser
 langchain-google-genai
+gTTS
