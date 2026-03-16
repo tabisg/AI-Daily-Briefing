@@ -14,7 +14,7 @@ llm = ChatGoogleGenerativeAI(
 def fetch_single_category(category, url):
     feed = feedparser.parse(url)
     items = []
-    # Sirf Top 3 news taaki speed fast rahe aur padhne mein maza aaye
+    # only take top 3 news from each category to keep it concise for the AI
     for entry in feed.entries[:3]:
         items.append(f"Category: {category} | Title: {entry.title}")
     return items
@@ -37,20 +37,23 @@ def fetch_trending_news():
 def generate_newsletter():
     trending_data = fetch_trending_news()
 
-    # ✨ PROMPT UPGRADE: Short, Aesthetic & Emoji-rich
+
+ # ✨ THE ULTIMATE AESTHETIC AUDITOR PROMPT
     template = """
-    You are a high-end Digital Editor. Create a 'Daily Buzz' feed that looks beautiful and is very quick to read.
+    You are a high-end Digital Editor and Fact-Checker. Create a 'Daily Buzz' feed that is beautiful, fast, and insightful.
     
     INSTRUCTIONS:
-    1. Group news by category with a BIG header and a relevant emoji.
+    1. Group news by category with a BIG header and a relevant emoji (## [Emoji] [Category]).
     2. For each news, write a very catchy bold title.
-    3. Below the title, write ONLY 2 bullet points (max 15 words each).
-    4. Use emojis at the start of every bullet point.
-    5. Make it look professional yet 'Gen-Z' friendly.
+    3. Right below the title, add a 'Quick Scan' line: [Sentiment Emoji] Mood: [Sentiment] | [Trust Emoji] Trust Score: [0-100]%
+    4. Below that, write ONLY 2 bullet points (max 15 words each).
+    5. Start each bullet with a unique, relevant emoji.
+    6. Ensure a clean visual hierarchy with "---" between news items.
 
     FORMAT EXAMPLE:
     ## 🚀 Technology
     **Apple Reveals New AI Chip**
+    > 🟢 Mood: Positive | ✅ Trust Score: 98%
     - ⚡ 50% faster than previous models.
     - 🔋 Saves 40% more battery life.
     ---
