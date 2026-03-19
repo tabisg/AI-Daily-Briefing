@@ -1,4 +1,4 @@
-\\🤖 AI News Auditor & Podcast Ecosystem (RAG Pipeline)
+🤖 AI News Auditor & Podcast Ecosystem (RAG Pipeline)
 📌 Overview
 This project is an automated, end-to-end Retrieval-Augmented Generation (RAG) pipeline. It autonomously ingests global news and developer trends, audits them for sentiment and credibility (Truth-O-Meter), and utilizes Gemini 2.5 Flash to generate noise-free daily briefings and automated Audio Podcasts.
 
